@@ -15,8 +15,9 @@
   /** @typedef {{value:string,label:string,description:string,name:string,per_label:string,per_label_60k:string|null,image:string,starting:boolean}} Option */
   /** @typedef {{key:string,title:string,options:Option[]}} OptionGroup */
   /** @typedef {{id:string,name:string,category:string,roll:string,spec:string,prices:Prices,recorded_at:string,chapters:Chapter[],options?:OptionGroup[]}} Sample */
+  /** @typedef {{key:string,title:string,line:string,seconds:number|null}} LoopInfo */
   /** @typedef {{build:string,built_at:string,recorded_at:string,campaign:string,link:string,link_label:string,qr_svg:string,attract:string[]|string,
-   *   chapters:Chapter[],samples?:Sample[],disclosure:string,idle_seconds:number}} KioskData */
+   *   loops?:LoopInfo[],chapters:Chapter[],samples?:Sample[],disclosure:string,idle_seconds:number}} KioskData */
   const data = /** @type {KioskData|undefined} */ (/** @type {any} */ (self).PACKOS_KIOSK);
   const root = /** @type {HTMLElement} */ (document.getElementById('kiosk'));
   if (!data || !root) {
@@ -372,6 +373,9 @@
       v: 1, build: data.build, screen: current, loop: current === 'attract' ? loopKey(loops[loopIndex]) : '', pinned: pinned >= 0,
       label: current === 'sample' ? shownSample : '', step: current === 'chapter' ? shownStep : '',
       loops: loops.map(loopKey), labels: samples.map((s) => [s.id, s.name]), steps: data.chapters.map((c) => [c.id, c.title]),
+      // What the phone shows on each video card: [key, title, line, seconds]. Older builds have no list; the phone then
+      // falls back to its own names.
+      info: (data.loops || []).map((l) => [l.key, l.title, l.line, Math.round(Number(l.seconds) || 0)]),
     });
     let lastReport = 0;
     /** @param {boolean} [unasked] a (re)connect, which a flaky hotspot can repeat: at most one report per 5 minutes */
