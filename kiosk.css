@@ -1,0 +1,179 @@
+/* packOS touch kiosk, portrait first (a 1080x1920 screen worn as a backpack).
+   Brand tokens mirror capture-studio/src/brand/email-brand.cjs (see automation/brand.py).
+   Baseline: Chromium 83 (Android 11's original System WebView). No flex `gap`, `aspect-ratio`,
+   `inset`, `:is()`/`:where()`/`:has()` or newer units; test_signage.py enforces this. */
+/* Every size is in rem, so this one value scales the page: 20px on a 1080-wide portrait panel,
+   the largest at which the steps menu still fits 1920px without scrolling. */
+.kiosk-html { font-size: clamp(14px, 1.85vw, 36px); }
+.kiosk {
+  --kiosk-ink: #16181d;
+  --kiosk-muted: #5f6b7a;
+  --kiosk-teal-text: #067a6f;  /* the only teal that carries text on a light ground */
+  --kiosk-teal-fill: #05c6b8;  /* fill only */
+  --kiosk-on-teal: #06231f;    /* the only legible foreground on the teal fill */
+  --kiosk-paper: #fbfaf7;
+  --kiosk-line: #d8ded9;
+  --kiosk-card: #ffffff;
+  --kiosk-sans: Inter, Roboto, "Helvetica Neue", Arial, system-ui, sans-serif;
+  --kiosk-mono: ui-monospace, "Roboto Mono", Menlo, Consolas, monospace;
+  --kiosk-ease: cubic-bezier(.2, .7, .2, 1);
+  --kiosk-gutter: 2.2rem;
+  --kiosk-shadow: 0 .15rem .9rem rgba(22, 24, 29, .09), inset 0 0 0 1px var(--kiosk-line);
+  margin: 0;
+  background: var(--kiosk-paper);
+  color: var(--kiosk-ink);
+  font-family: var(--kiosk-sans);
+  font-size: 1rem;
+  overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.kiosk *, .kiosk *::before, .kiosk *::after { box-sizing: border-box; }
+.kiosk [hidden] { display: none !important; }
+.kiosk-root { position: fixed; top: 0; right: 0; bottom: 0; left: 0; }
+.kiosk-screen {
+  position: absolute; top: 0; right: 0; bottom: 0; left: 0;
+  display: grid; grid-auto-rows: min-content; align-content: start; row-gap: 1rem;
+}
+.kiosk-screen:not([hidden]) { animation: kiosk-in .45s var(--kiosk-ease) both; }
+@keyframes kiosk-in { from { opacity: 0; transform: translateY(.6rem); } to { opacity: 1; transform: none; } }
+
+.kiosk-eyebrow { margin: 0; color: var(--kiosk-teal-text); font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+
+/* Buttons: large, single-tap targets. */
+.kiosk-button, .kiosk-back, .kiosk-wake {
+  display: inline-block; font: inherit; font-weight: 700; border: 0; cursor: pointer; border-radius: 999px; text-decoration: none;
+  min-height: 3.2rem; padding: .8rem 1.8rem; color: var(--kiosk-on-teal); background: var(--kiosk-teal-fill);
+}
+.kiosk-button-quiet, .kiosk-back { color: var(--kiosk-ink); background: var(--kiosk-card); box-shadow: inset 0 0 0 2px var(--kiosk-line); }
+.kiosk-button:active, .kiosk-back:active, .kiosk-wake:active, .kiosk-chapter-tile:active, .kiosk-sample-tile:active, .kiosk-run:active { transform: scale(.98); }
+.kiosk-button:focus, .kiosk-back:focus, .kiosk-wake:focus, .kiosk-chapter-tile:focus, .kiosk-sample-tile:focus, .kiosk-run:focus {
+  outline: 3px solid var(--kiosk-teal-text); outline-offset: 3px;
+}
+.kiosk-button:focus:not(:focus-visible), .kiosk-back:focus:not(:focus-visible), .kiosk-wake:focus:not(:focus-visible),
+.kiosk-chapter-tile:focus:not(:focus-visible), .kiosk-sample-tile:focus:not(:focus-visible), .kiosk-run:focus:not(:focus-visible) { outline: none; }
+
+/* Attract loop: the portrait signage films, full screen. The prompt sits in their empty top-right corner. */
+.kiosk-attract { display: block; background: var(--kiosk-paper); }
+.kiosk-attract-video { display: block; width: 100%; height: 100%; object-fit: contain; background: var(--kiosk-paper); }
+.kiosk-wake {
+  position: absolute; top: 2.2%; right: 5%;
+  font-size: 1.15rem; padding: .9rem 2rem; box-shadow: 0 .5rem 1.6rem rgba(6, 35, 31, .2);
+  animation: kiosk-wake-in .7s .8s var(--kiosk-ease) both;
+}
+@keyframes kiosk-wake-in { from { opacity: 0; transform: translateY(-.8rem); } to { opacity: 1; transform: none; } }
+
+/* Menu */
+.kiosk-menu { grid-template-rows: auto minmax(0, 1fr) auto; row-gap: 0; }
+.kiosk-head { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; column-gap: 1rem; padding: 1.6rem var(--kiosk-gutter) .4rem; }
+.kiosk-logo { height: 2rem; width: auto; }
+.kiosk-sample { margin: 0; color: var(--kiosk-muted); font-size: .78rem; text-align: right; }
+.kiosk-menu-body { min-height: 0; overflow-y: auto; display: grid; grid-auto-rows: min-content; row-gap: .9rem; padding: .4rem var(--kiosk-gutter) .4rem; }
+.kiosk-title { margin: .3rem 0 0; font-size: 2.3rem; line-height: 1.1; letter-spacing: -.01em; }
+.kiosk-section { margin: .5rem 0 -.2rem; font-size: 1.25rem; }
+
+.kiosk-qr-card, .kiosk-prices, .kiosk-chapter-tile, .kiosk-sample-tile, .kiosk-stage, .kiosk-end {
+  background: var(--kiosk-card); border-radius: .9rem; box-shadow: var(--kiosk-shadow);
+}
+.kiosk-qr-card { display: grid; grid-template-columns: 7rem minmax(0, 1fr); column-gap: 1.1rem; align-items: center; padding: .8rem 1.1rem .8rem .8rem; }
+.kiosk-qr svg { display: block; width: 100%; height: auto; }
+.kiosk-qr-title { margin: 0; font-size: 1.4rem; font-weight: 700; line-height: 1.15; }
+.kiosk-qr-sub { margin: .3rem 0 0; color: var(--kiosk-teal-text); font-weight: 700; font-size: .95rem; }
+.kiosk-link { margin: .25rem 0 0; color: var(--kiosk-muted); font-size: .85rem; word-wrap: break-word; }
+
+/* 16:9 media boxes without `aspect-ratio`: a padding-bottom frame and an absolutely placed child. */
+.kiosk-ratio { display: block; position: relative; width: 100%; height: 0; padding-bottom: 56.25%; background: var(--kiosk-paper); overflow: hidden; }
+.kiosk-ratio > img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+
+.kiosk-chapters { list-style: none; margin: 0; padding: 0; display: grid; row-gap: .55rem; }
+.kiosk-chapter-tile {
+  display: grid; grid-template-columns: 24% minmax(0, 1fr); align-items: center; width: 100%; padding: 0; text-align: left;
+  font: inherit; color: inherit; border: 0; overflow: hidden; cursor: pointer;
+}
+.kiosk-tile-text { padding: .35rem 1rem; }
+.kiosk-tile-title { display: block; margin-top: .1rem; font-size: 1.1rem; font-weight: 700; }
+.kiosk-tile-line { display: block; margin-top: .1rem; color: var(--kiosk-muted); font-size: .8rem; line-height: 1.3; }
+
+.kiosk-samples { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .6rem; }
+.kiosk-sample-tile {
+  display: block; width: 100%; padding: 0 0 .5rem; text-align: left; font: inherit; color: inherit; border: 0; overflow: hidden; cursor: pointer;
+}
+.kiosk-sample-tile .kiosk-ratio { padding-bottom: 62%; background: var(--kiosk-paper); }
+.kiosk-sample-tile .kiosk-ratio > img { object-fit: contain; }
+.kiosk-sample-tile .kiosk-eyebrow { display: block; margin: .4rem .6rem 0; font-size: .62rem; }
+.kiosk-sample-tile .kiosk-tile-title { margin: .1rem .6rem 0; font-size: .9rem; }
+
+.kiosk-foot { padding: .5rem var(--kiosk-gutter) .9rem; }
+.kiosk-disclosure { margin: 0; color: var(--kiosk-muted); font-size: .7rem; text-align: center; }
+
+/* Chapter and sample screens: header, a 16:9 stage, what it showed, then the QR card. */
+.kiosk-chapter { padding-bottom: 1.6rem; grid-template-rows: auto auto auto auto minmax(0, 1fr); }
+/* The label screen has optional parts, so it stacks as a column (margins, not flex `gap`) with the QR card at the bottom. */
+.kiosk-sample-screen { display: flex; flex-direction: column; padding-bottom: 1.6rem; }
+.kiosk-sample-screen > * + * { margin-top: .9rem; }
+.kiosk-sample-screen > .kiosk-pinned-qr { margin-top: auto; align-self: stretch; }
+.kiosk-sample-screen > .kiosk-stage { flex: none; }
+.kiosk-chapter-head { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; column-gap: 1.2rem; padding: 1.6rem var(--kiosk-gutter) 0; }
+.kiosk-chapter-title { margin: .15rem 0 0; font-size: 1.9rem; line-height: 1.1; }
+.kiosk-sample-spec { margin: .3rem 0 0; color: var(--kiosk-muted); font-size: .9rem; }
+.kiosk-stage { position: relative; margin: 0 var(--kiosk-gutter); height: 0; padding-bottom: calc((100% - 2 * var(--kiosk-gutter)) * .5625); overflow: hidden; }
+.kiosk-stage > video, .kiosk-stage > img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; display: block; background: var(--kiosk-paper); }
+.kiosk-end { margin: 0 var(--kiosk-gutter); display: grid; justify-items: center; row-gap: 1rem; padding: 1.2rem 1.4rem;
+  animation: kiosk-in .45s var(--kiosk-ease) both; }
+.kiosk-callout { text-align: center; }
+.kiosk-callout-text { margin: .3rem 0 0; font-size: 1.45rem; font-weight: 700; }
+.kiosk-sample-callout { margin: 0 var(--kiosk-gutter); }
+.kiosk-end-actions { display: grid; grid-auto-flow: column; justify-content: center; column-gap: .8rem; }
+.kiosk-pinned-qr { margin: 0 var(--kiosk-gutter); align-self: end; }
+.kiosk-clip-buttons { margin: 0 var(--kiosk-gutter); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: .6rem; }
+.kiosk-clip-buttons .kiosk-button { padding: .8rem .6rem; font-size: .95rem; }
+.kiosk-clip-buttons .kiosk-button[aria-pressed="true"] { box-shadow: inset 0 0 0 3px var(--kiosk-teal-text); }
+
+.kiosk-options { margin: 0 var(--kiosk-gutter); padding: .9rem 1.1rem 1rem; background: var(--kiosk-card); border-radius: .9rem; box-shadow: var(--kiosk-shadow); }
+.kiosk-option-groups { margin-top: .6rem; display: grid; row-gap: .5rem; }
+.kiosk-option-group { display: grid; grid-template-columns: 6.2rem minmax(0, 1fr); align-items: center; column-gap: .6rem; }
+.kiosk-option-title { margin: 0; font-weight: 700; font-size: .9rem; }
+.kiosk-option-chips { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .4rem; }
+.kiosk-option {
+  font: inherit; font-size: .85rem; font-weight: 700; cursor: pointer; border: 0; border-radius: .6rem; padding: .65rem .3rem; text-align: center;
+  background: var(--kiosk-paper); color: var(--kiosk-ink); box-shadow: inset 0 0 0 1px var(--kiosk-line);
+}
+.kiosk-option[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--kiosk-teal-text); background: #eef8f6; }
+.kiosk-option:active { transform: scale(.98); }
+.kiosk-option-detail { margin: .7rem 0 0; font-size: .95rem; line-height: 1.4; min-height: 2.8em; }
+.kiosk-option-detail .kiosk-mono { font-weight: 700; }
+.kiosk-prices { margin: 0 var(--kiosk-gutter); padding: 1rem 1.1rem; }
+.kiosk-runs { margin-top: .7rem; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .45rem; }
+.kiosk-run {
+  font: inherit; cursor: pointer; border: 0; border-radius: .6rem; padding: .6rem .2rem; background: var(--kiosk-paper);
+  box-shadow: inset 0 0 0 1px var(--kiosk-line); color: var(--kiosk-ink); text-align: center;
+}
+.kiosk-run[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--kiosk-teal-text); background: #eef8f6; }
+.kiosk-run-qty { display: block; font-weight: 700; font-size: 1rem; }
+.kiosk-run-price { display: block; font-family: var(--kiosk-mono); font-size: .72rem; color: var(--kiosk-muted); }
+.kiosk-run-detail { margin: .75rem 0 0; font-size: 1.1rem; font-weight: 700; min-height: 1.3em; }
+.kiosk-mono { font-family: var(--kiosk-mono); font-weight: 600; }
+.kiosk-note { margin: .35rem 0 0; color: var(--kiosk-muted); font-size: .72rem; line-height: 1.4; }
+
+/* Staff details: long-press the logo. */
+.kiosk-admin { position: absolute; top: 0; right: 0; bottom: 0; left: 0; display: grid; place-items: center; background: rgba(22, 24, 29, .45); }
+.kiosk-admin-card { width: 90vw; max-width: 44rem; padding: 1.6rem; border-radius: 1rem; background: var(--kiosk-card); }
+.kiosk-admin-card h2 { margin: 0 0 1rem; }
+.kiosk-admin-card .kiosk-end-actions { grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: .6rem; }
+.kiosk-admin-card .kiosk-button { text-align: center; }
+.kiosk-admin-facts { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .4rem 1rem; margin: 0 0 1.2rem; font-size: .85rem; }
+.kiosk-admin-facts dt { color: var(--kiosk-muted); }
+.kiosk-admin-facts dd { margin: 0; word-wrap: break-word; font-family: var(--kiosk-mono); }
+
+/* A landscape screen still works: same column, centred, sized by height. */
+@media (min-aspect-ratio: 3 / 4) {
+  .kiosk-html { font-size: clamp(14px, 1.04vh, 36px); }
+  .kiosk-screen:not(.kiosk-attract) { left: 50%; right: auto; width: 56.25vh; transform: translateX(-50%); }
+  .kiosk-screen:not(.kiosk-attract):not([hidden]) { animation: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kiosk *, .kiosk *::before, .kiosk *::after { animation: none !important; transition: none !important; }
+}

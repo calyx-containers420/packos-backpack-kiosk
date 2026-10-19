@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en" class="kiosk-html">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#fbfaf7">
+<title>packOS · See a label quoted</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="packos-logo.png">
+<link rel="stylesheet" href="kiosk.css">
+<!-- Data is a script, not fetched JSON, so the page also works from file:// (a USB stick). -->
+<script src="kiosk-data.js"></script>
+<script src="kiosk.js" defer></script>
+</head>
+<body class="kiosk">
+<main class="kiosk-root" id="kiosk">
+
+  <section class="kiosk-screen kiosk-attract" data-screen="attract">
+    <video class="kiosk-attract-video" muted autoplay playsinline preload="auto"></video>
+    <button class="kiosk-wake" type="button">Tap to try it</button>
+  </section>
+
+  <section class="kiosk-screen kiosk-menu" data-screen="menu" hidden>
+    <header class="kiosk-head">
+      <img class="kiosk-logo" src="packos-logo.png" alt="packOS" width="144" height="32" draggable="false">
+      <p class="kiosk-sample">Recorded on packos.ai with our sample labels</p>
+    </header>
+    <div class="kiosk-menu-body">
+      <h1 class="kiosk-title">See packOS quote a label</h1>
+      <div class="kiosk-qr-card">
+        <div class="kiosk-qr" role="img" aria-label="QR code for the packOS quote page"></div>
+        <div>
+          <p class="kiosk-qr-title">Quote your own label</p>
+          <p class="kiosk-qr-sub">Scan with your phone camera</p>
+          <p class="kiosk-link"></p>
+        </div>
+      </div>
+      <h2 class="kiosk-section">How it works</h2>
+      <ol class="kiosk-chapters"></ol>
+      <h2 class="kiosk-section kiosk-samples-title" hidden>See a label like yours</h2>
+      <ul class="kiosk-samples" hidden></ul>
+    </div>
+    <footer class="kiosk-foot"><p class="kiosk-disclosure"></p></footer>
+  </section>
+
+  <section class="kiosk-screen kiosk-chapter" data-screen="chapter" hidden>
+    <header class="kiosk-chapter-head">
+      <button class="kiosk-back" type="button">All steps</button>
+      <div>
+        <p class="kiosk-eyebrow kiosk-chapter-step"></p>
+        <h2 class="kiosk-chapter-title"></h2>
+      </div>
+    </header>
+    <div class="kiosk-stage"><video class="kiosk-chapter-video" muted playsinline preload="auto"></video></div>
+    <div class="kiosk-end" hidden>
+      <div class="kiosk-callout" hidden>
+        <p class="kiosk-eyebrow kiosk-callout-label"></p>
+        <p class="kiosk-callout-text"></p>
+      </div>
+      <div class="kiosk-end-actions">
+        <button class="kiosk-again kiosk-button kiosk-button-quiet" type="button">Watch again</button>
+        <button class="kiosk-next kiosk-button" type="button"></button>
+      </div>
+    </div>
+    <div class="kiosk-qr-card kiosk-pinned-qr">
+      <div class="kiosk-qr" role="img" aria-label="QR code for the packOS quote page"></div>
+      <div>
+        <p class="kiosk-qr-title">Quote your own label</p>
+        <p class="kiosk-qr-sub">Scan with your phone camera</p>
+        <p class="kiosk-link"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="kiosk-screen kiosk-sample-screen" data-screen="sample" hidden>
+    <header class="kiosk-chapter-head">
+      <button class="kiosk-back" type="button">All labels</button>
+      <div>
+        <p class="kiosk-eyebrow kiosk-sample-category"></p>
+        <h2 class="kiosk-chapter-title kiosk-sample-name"></h2>
+        <p class="kiosk-sample-spec"></p>
+      </div>
+    </header>
+    <div class="kiosk-stage">
+      <img class="kiosk-sample-roll" alt="" draggable="false">
+      <video class="kiosk-sample-video" muted playsinline preload="none" hidden></video>
+    </div>
+    <div class="kiosk-clip-buttons" role="group" aria-label="Watch this label"></div>
+    <div class="kiosk-options" hidden>
+      <p class="kiosk-eyebrow">Try it on this label</p>
+      <div class="kiosk-option-groups"></div>
+      <p class="kiosk-option-detail" aria-live="polite"></p>
+    </div>
+    <div class="kiosk-callout kiosk-sample-callout" hidden>
+      <p class="kiosk-eyebrow kiosk-callout-label"></p>
+      <p class="kiosk-callout-text"></p>
+    </div>
+    <div class="kiosk-prices" hidden>
+      <p class="kiosk-eyebrow">Price by run size</p>
+      <div class="kiosk-runs" role="group" aria-label="Run sizes"></div>
+      <p class="kiosk-run-detail" aria-live="polite"></p>
+      <p class="kiosk-note"></p>
+    </div>
+    <div class="kiosk-qr-card kiosk-pinned-qr">
+      <div class="kiosk-qr" role="img" aria-label="QR code for the packOS quote page"></div>
+      <div>
+        <p class="kiosk-qr-title">Quote your own label</p>
+        <p class="kiosk-qr-sub">Scan with your phone camera</p>
+        <p class="kiosk-link"></p>
+      </div>
+    </div>
+  </section>
+
+  <div class="kiosk-admin" role="dialog" aria-modal="true" aria-label="Kiosk details" hidden>
+    <div class="kiosk-admin-card">
+      <h2>Kiosk details</h2>
+      <dl class="kiosk-admin-facts"></dl>
+      <div class="kiosk-end-actions">
+        <a class="kiosk-button kiosk-button-quiet" href="check.html">Device check</a>
+        <button class="kiosk-reload kiosk-button kiosk-button-quiet" type="button">Reload</button>
+        <button class="kiosk-reset kiosk-button kiosk-button-quiet" type="button">Reset counts</button>
+        <button class="kiosk-close kiosk-button" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+</body>
+</html>

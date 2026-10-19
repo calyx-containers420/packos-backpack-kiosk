@@ -1,0 +1,10 @@
+{
+  "name": "packOS kiosk",
+  "short_name": "packOS",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#fbfaf7",
+  "theme_color": "#fbfaf7"
+}
