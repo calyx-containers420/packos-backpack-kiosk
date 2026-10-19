@@ -52,10 +52,13 @@ async function ranged(request, response) {
 worker.addEventListener('fetch', (event) => {
   const request = event.request;
   if (request.method !== 'GET' || new URL(request.url).origin !== worker.location.origin) return;
+  // ignoreVary: hosts such as GitHub Pages answer with "Vary: Accept-Encoding", and the media player asks with its own
+  // Accept-Encoding (identity), so a strict match misses every cached film and the kiosk goes to the network instead.
+  const options = { ignoreSearch: true, ignoreVary: true };
   event.respondWith(caches.open(CACHE).then(async (cache) => {
-    const hit = await cache.match(request, { ignoreSearch: true })
+    const hit = await cache.match(request, options)
       // Opening the kiosk folder itself (…/kiosk/) offline: serve the cached page.
-      || (request.mode === 'navigate' && new URL(request.url).pathname.endsWith('/') ? await cache.match('index.html') : undefined);
+      || (request.mode === 'navigate' && new URL(request.url).pathname.endsWith('/') ? await cache.match('index.html', options) : undefined);
     if (hit) return ranged(request, hit);
     return fetch(request);
   }));

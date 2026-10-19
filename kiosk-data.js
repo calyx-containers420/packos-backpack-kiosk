@@ -1,6 +1,6 @@
 self.PACKOS_KIOSK = {
  "version": 1,
- "built_at": "2026-10-19T04:02:34+00:00",
+ "built_at": "2026-10-19T06:01:15+00:00",
  "recorded_at": "2026-10-19T01:14:57.900Z",
  "campaign": "packexpo-2026",
  "link": "https://packos.ai/quote/?utm_source=packos_signage&utm_medium=qr&utm_campaign=packexpo-2026&utm_content=kiosk",
@@ -1871,6 +1871,6 @@ self.PACKOS_KIOSK = {
   "sw.js",
   "kiosk-data.js"
  ],
- "bytes": 119512064,
- "build": "d6c5070dfa73d4ae"
+ "bytes": 119458437,
+ "build": "017677a06c7e8a90"
 };
