@@ -1,6 +1,6 @@
 self.PACKOS_KIOSK = {
  "version": 1,
- "built_at": "2026-10-21T15:12:24+00:00",
+ "built_at": "2026-10-21T15:22:38+00:00",
  "recorded_at": "2026-10-19T01:14:57.900Z",
  "campaign": "packexpo-2026",
  "link": "https://packos.ai/quote/?utm_source=packos_signage&utm_medium=qr&utm_campaign=packexpo-2026&utm_content=kiosk",
@@ -11,6 +11,8 @@ self.PACKOS_KIOSK = {
   "media/loop-vault-tour.mp4",
   "media/loop-calyx-drams.mp4",
   "media/loop-dram-anatomy.mp4",
+  "media/loop-design-to-price.mp4",
+  "media/loop-connect-everything.mp4",
   "media/loop-street.mp4",
   "media/loop-gallery.mp4",
   "media/loop-options.mp4",
@@ -40,6 +42,18 @@ self.PACKOS_KIOSK = {
    "title": "Dram anatomy",
    "line": "Six features, one dram",
    "seconds": 32.0
+  },
+  {
+   "key": "design-to-price",
+   "title": "Design to price",
+   "line": "Illustrator, dieline, 3D, live price",
+   "seconds": 90.0
+  },
+  {
+   "key": "connect-everything",
+   "title": "Connect everything",
+   "line": "56 systems, ChatGPT and Claude",
+   "seconds": 90.0
   },
   {
    "key": "street",
@@ -1825,6 +1839,8 @@ self.PACKOS_KIOSK = {
   "media/label-quantity.mp4",
   "media/label-roll.jpg",
   "media/loop-calyx-drams.mp4",
+  "media/loop-connect-everything.mp4",
+  "media/loop-design-to-price.mp4",
   "media/loop-dram-anatomy.mp4",
   "media/loop-gallery.mp4",
   "media/loop-inside.mp4",
@@ -1929,6 +1945,6 @@ self.PACKOS_KIOSK = {
   "sw.js",
   "kiosk-data.js"
  ],
- "bytes": 260632301,
- "build": "b36c1b259d79cb5a"
+ "bytes": 389438775,
+ "build": "b9d82bf1487c83b0"
 };
