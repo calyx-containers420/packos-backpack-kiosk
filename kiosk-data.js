@@ -1,6 +1,6 @@
 self.PACKOS_KIOSK = {
  "version": 1,
- "built_at": "2026-10-19T14:34:54+00:00",
+ "built_at": "2026-10-21T15:12:24+00:00",
  "recorded_at": "2026-10-19T01:14:57.900Z",
  "campaign": "packexpo-2026",
  "link": "https://packos.ai/quote/?utm_source=packos_signage&utm_medium=qr&utm_campaign=packexpo-2026&utm_content=kiosk",
@@ -9,6 +9,8 @@ self.PACKOS_KIOSK = {
  "attract": [
   "media/loop-packos-film.mp4",
   "media/loop-vault-tour.mp4",
+  "media/loop-calyx-drams.mp4",
+  "media/loop-dram-anatomy.mp4",
   "media/loop-street.mp4",
   "media/loop-gallery.mp4",
   "media/loop-options.mp4",
@@ -26,6 +28,18 @@ self.PACKOS_KIOSK = {
    "title": "Vault tour",
    "line": "Labels, pouches and cartons, signed",
    "seconds": 100.48
+  },
+  {
+   "key": "calyx-drams",
+   "title": "Calyx drams",
+   "line": "Child-resistant, senior-friendly",
+   "seconds": 42.0
+  },
+  {
+   "key": "dram-anatomy",
+   "title": "Dram anatomy",
+   "line": "Six features, one dram",
+   "seconds": 32.0
   },
   {
    "key": "street",
@@ -1810,6 +1824,8 @@ self.PACKOS_KIOSK = {
   "media/label-quantity.jpg",
   "media/label-quantity.mp4",
   "media/label-roll.jpg",
+  "media/loop-calyx-drams.mp4",
+  "media/loop-dram-anatomy.mp4",
   "media/loop-gallery.mp4",
   "media/loop-inside.mp4",
   "media/loop-options.mp4",
@@ -1913,6 +1929,6 @@ self.PACKOS_KIOSK = {
   "sw.js",
   "kiosk-data.js"
  ],
- "bytes": 208655840,
- "build": "8c6df6479d961103"
+ "bytes": 260632301,
+ "build": "b36c1b259d79cb5a"
 };
